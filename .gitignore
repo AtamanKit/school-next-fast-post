@@ -1,2 +1,7 @@
 10000-rows.csv
+
+# Ignore `node.js` directories and files
 */node_modules
+
+# Ignore `python` directories and files
+*/env
