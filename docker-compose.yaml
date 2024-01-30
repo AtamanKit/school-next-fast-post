@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  database:
+    container_name: database
+    build:
+      context: database
+      volumes:
+        - ./database/postgres_data:/var/lib/postgresql/data
+      env_file:
+        - ./database/.env
+        
