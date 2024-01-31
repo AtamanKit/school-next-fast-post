@@ -1,11 +1,35 @@
 version: "3.7"
 services:
-  database:
-    container_name: database
+  web:
+    image: web:v1
+    container_name: web
     build:
-      context: database
-      volumes:
-        - ./database/postgres_data:/var/lib/postgresql/data
-      env_file:
-        - ./database/.env
-        
+      context: ./web
+    volumes:
+      - ./web/app:/app/app
+      - ./web/components:/app/components
+      - ./web/lib:/app/lib
+      - ./web/public:/app/public
+    ports:
+      - "3000:3000"
+  api:
+    image: api:v1
+    container_name: api
+    build:
+      context: ./api
+    volumes:
+      - ./api:/app
+    command: uvicorn run:server --reload 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./api/.env.api
+    depends_on:
+      - database
+  database:
+    container_name: postgres
+    image: postgres:16.1-alpine
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    env_file:
+      - ./postgres/.env.postgres
