@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, select
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from services.database import Base
+from app.services.database import Base
 
 
 class Employee(Base):
@@ -42,3 +42,11 @@ class Employee(Base):
     async def get_all(cls, db: AsyncSession):
         return (await db.execute(select(cls))).scalars().all()
 
+    @classmethod
+    async def delete(cls, db:AsyncSession, id: int):
+        transaction = await cls.get(db, id)
+        if transaction is not None:
+            db.delete(transaction)
+            await db.commit()
+            return True
+        return False

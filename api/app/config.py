@@ -1,13 +1,19 @@
 import os
 
 
-class Config(object):
+class Config:
+    # DB_CONFIG = os.getenv(
+    #     "DB_CONFIG",
+    #     "postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}".format(
+    #         DB_USER=os.getenv("DB_USER"),
+    #         DB_PASSWORD=os.getenv("DB_PASSWORD"),
+    #         DB_HOST=os.getenv("DB_HOST"),
+    #         DB_NAME=os.getenv("DB_NAME"),
+    #     ),
+    # )
     DB_CONFIG = os.getenv(
         "DB_CONFIG",
-        "postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}".format(
-            DB_USER=os.getenv("DB_USER", "postgres"),
-            DB_PASSWORD=os.getenv("DB_PASSWORD", "password"),
-            DB_HOST=os.getenv("DB_HOST"),
-            DB_NAME=os.getenv("DB_NAME", "postgres"),
-        ),
+        "postgresql+asyncpg://postgres:postgres@db/postgres",
     )
+
+config = Config
