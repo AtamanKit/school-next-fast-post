@@ -33,24 +33,24 @@ class EmployeeSchema(EmployeeSchemaBase):
         orm_mode = True
 
 
-@router.get("/get-user", response_model=EmployeeSchema)
+@router.get("/get-emplpoyee", response_model=EmployeeSchema)
 async def get_employee(id: int, db: AsyncSession = Depends(get_db)):
     employee = await EmployeeModel.get(db, id)
     return employee
 
 
-@router.get("/get-users", response_model=list[EmployeeSchema])
+@router.get("/get-employees", response_model=list[EmployeeSchema])
 async def get_employees(db: AsyncSession = Depends(get_db)):
     employees = await EmployeeModel.get_all(db)
     return employees
 
 
-@router.post("/create-user", response_model=EmployeeSchema)
+@router.post("/create-employee", response_model=EmployeeSchema)
 async def create_employee(employee: EmployeeSchemaCreate, db: AsyncSession = Depends(get_db)):
     employee = await EmployeeModel.create(db, **employee.dict())
     return employee
     
 
-@router.delete("/delete-user", response_model=bool)
+@router.delete("/delete-employee", response_model=bool)
 async def delete_employee(id: int, db: AsyncSession = Depends(get_db)):
     return await EmployeeModel.delete(db, id)

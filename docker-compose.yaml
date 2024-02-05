@@ -24,6 +24,7 @@ services:
       - "8000:8000"
     env_file:
       - ./api/.env.api
+      - ./api/.env.test
     depends_on:
       - db
   db:
@@ -33,3 +34,10 @@ services:
       - ./db/data:/var/lib/postgresql/data
     env_file:
       - ./db/.env.db
+  test_db:
+    container_name: test_postgres
+    image: postgres:16.1-alpine
+    # volumes:
+    #   - ./db/test_data:/var/lib/postgresql/data
+    env_file:
+      - ./db/.env.test_db

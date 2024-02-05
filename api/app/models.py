@@ -46,7 +46,7 @@ class Employee(Base):
     async def delete(cls, db:AsyncSession, id: int):
         transaction = await cls.get(db, id)
         if transaction is not None:
-            db.delete(transaction)
+            await db.delete(transaction)
             await db.commit()
             return True
         return False
