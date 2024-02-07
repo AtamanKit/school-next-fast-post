@@ -13,9 +13,10 @@ from app.services.database import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+# config = context.config
+# config.set_main_option("sqlalchemy.url", app_config.DB_CONFIG)
 config = context.config
-config.set_main_option("sqlalchemy.url", app_config.DB_CONFIG)
-
+config.set_main_option("sqlalchemy.url", app_config.DB_TEST_CONFIG)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
