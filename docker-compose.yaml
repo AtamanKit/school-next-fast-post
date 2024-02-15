@@ -24,7 +24,7 @@ services:
       - "8000:8000"
     env_file:
       - ./api/.env.api
-      - ./api/.env.test
+      # - ./api/.env.test
     depends_on:
       - db
   db:

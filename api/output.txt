@@ -1,227 +1,21 @@
 ============================= test session starts ==============================
 platform linux -- Python 3.11.8, pytest-8.0.0, pluggy-1.4.0
 rootdir: /app
-plugins: postgresql-5.1.0, anyio-4.2.0
+plugins: postgresql-5.1.0, anyio-4.2.0, asyncio-0.23.5
+asyncio: mode=Mode.STRICT
 collected 1 item
 
-tests/test_crude.py F
+tests/test_curde.py F
 
 =================================== FAILURES ===================================
 __________________________________ test_crude __________________________________
 
-self = <sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_cursor object at 0x7f179c427220>
-operation = 'SELECT employees.id, employees.first_name, employees.last_name, employees.gender, employees.age, employees.email, emp... employees.experience_years, employees.salary, employees.marital_status, employees.number_of_children \nFROM employees'
-parameters = ()
-
-    async def _prepare_and_execute(self, operation, parameters):
-        adapt_connection = self._adapt_connection
-    
-        async with adapt_connection._execute_mutex:
-            if not adapt_connection._started:
-                await adapt_connection._start_transaction()
-    
-            if parameters is None:
-                parameters = ()
-    
-            try:
->               prepared_stmt, attributes = await adapt_connection._prepare(
-                    operation, self._invalidate_schema_cache_asof
-                )
-
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:522: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:773: in _prepare
-    prepared_stmt = await self._connection.prepare(
-/usr/local/lib/python3.11/site-packages/asyncpg/connection.py:636: in prepare
-    return await self._prepare(
-/usr/local/lib/python3.11/site-packages/asyncpg/connection.py:654: in _prepare
-    stmt = await self._get_statement(
-/usr/local/lib/python3.11/site-packages/asyncpg/connection.py:433: in _get_statement
-    statement = await self._protocol.prepare(
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
->   ???
-E   asyncpg.exceptions.UndefinedTableError: relation "employees" does not exist
-
-asyncpg/protocol/protocol.pyx:166: UndefinedTableError
-
-The above exception was the direct cause of the following exception:
-
-self = <sqlalchemy.engine.base.Connection object at 0x7f179ceb8690>
-dialect = <sqlalchemy.dialects.postgresql.asyncpg.PGDialect_asyncpg object at 0x7f179cff9150>
-context = <sqlalchemy.dialects.postgresql.asyncpg.PGExecutionContext_asyncpg object at 0x7f179cf5f590>
-statement = <sqlalchemy.dialects.postgresql.asyncpg.PGCompiler_asyncpg object at 0x7f179cf5f410>
-parameters = [()]
-
-    def _exec_single_context(
-        self,
-        dialect: Dialect,
-        context: ExecutionContext,
-        statement: Union[str, Compiled],
-        parameters: Optional[_AnyMultiExecuteParams],
-    ) -> CursorResult[Any]:
-        """continue the _execute_context() method for a single DBAPI
-        cursor.execute() or cursor.executemany() call.
-    
-        """
-        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
-            generic_setinputsizes = context._prepare_set_input_sizes()
-    
-            if generic_setinputsizes:
-                try:
-                    dialect.do_set_input_sizes(
-                        context.cursor, generic_setinputsizes, context
-                    )
-                except BaseException as e:
-                    self._handle_dbapi_exception(
-                        e, str(statement), parameters, None, context
-                    )
-    
-        cursor, str_statement, parameters = (
-            context.cursor,
-            context.statement,
-            context.parameters,
-        )
-    
-        effective_parameters: Optional[_AnyExecuteParams]
-    
-        if not context.executemany:
-            effective_parameters = parameters[0]
-        else:
-            effective_parameters = parameters
-    
-        if self._has_events or self.engine._has_events:
-            for fn in self.dispatch.before_cursor_execute:
-                str_statement, effective_parameters = fn(
-                    self,
-                    cursor,
-                    str_statement,
-                    effective_parameters,
-                    context,
-                    context.executemany,
-                )
-    
-        if self._echo:
-            self._log_info(str_statement)
-    
-            stats = context._get_cache_stats()
-    
-            if not self.engine.hide_parameters:
-                self._log_info(
-                    "[%s] %r",
-                    stats,
-                    sql_util._repr_params(
-                        effective_parameters,
-                        batches=10,
-                        ismulti=context.executemany,
-                    ),
-                )
-            else:
-                self._log_info(
-                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
-                    stats,
-                )
-    
-        evt_handled: bool = False
-        try:
-            if context.execute_style is ExecuteStyle.EXECUTEMANY:
-                effective_parameters = cast(
-                    "_CoreMultiExecuteParams", effective_parameters
-                )
-                if self.dialect._has_events:
-                    for fn in self.dialect.dispatch.do_executemany:
-                        if fn(
-                            cursor,
-                            str_statement,
-                            effective_parameters,
-                            context,
-                        ):
-                            evt_handled = True
-                            break
-                if not evt_handled:
-                    self.dialect.do_executemany(
-                        cursor,
-                        str_statement,
-                        effective_parameters,
-                        context,
-                    )
-            elif not effective_parameters and context.no_parameters:
-                if self.dialect._has_events:
-                    for fn in self.dialect.dispatch.do_execute_no_params:
-                        if fn(cursor, str_statement, context):
-                            evt_handled = True
-                            break
-                if not evt_handled:
-                    self.dialect.do_execute_no_params(
-                        cursor, str_statement, context
-                    )
-            else:
-                effective_parameters = cast(
-                    "_CoreSingleExecuteParams", effective_parameters
-                )
-                if self.dialect._has_events:
-                    for fn in self.dialect.dispatch.do_execute:
-                        if fn(
-                            cursor,
-                            str_statement,
-                            effective_parameters,
-                            context,
-                        ):
-                            evt_handled = True
-                            break
-                if not evt_handled:
->                   self.dialect.do_execute(
-                        cursor, str_statement, effective_parameters, context
-                    )
-
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1969: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py:922: in do_execute
-    cursor.execute(statement, parameters)
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:580: in execute
-    self._adapt_connection.await_(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:130: in await_only
-    return current.driver.switch(awaitable)  # type: ignore[no-any-return]
-/usr/local/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:195: in greenlet_spawn
-    value = await result
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:558: in _prepare_and_execute
-    self._handle_exception(error)
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:509: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = <AdaptedConnection <asyncpg.connection.Connection object at 0x7f179ced9120>>
-error = UndefinedTableError('relation "employees" does not exist')
-
-    def _handle_exception(self, error):
-        if self._connection.is_closed():
-            self._transaction = None
-            self._started = False
-    
-        if not isinstance(error, AsyncAdapt_asyncpg_dbapi.Error):
-            exception_mapping = self.dbapi._asyncpg_error_translate
-    
-            for super_ in type(error).__mro__:
-                if super_ in exception_mapping:
-                    translated_error = exception_mapping[super_](
-                        "%s: %s" % (type(error), error)
-                    )
-                    translated_error.pgcode = (
-                        translated_error.sqlstate
-                    ) = getattr(error, "sqlstate", None)
->                   raise translated_error from error
-E                   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedTableError'>: relation "employees" does not exist
-
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: ProgrammingError
-
-The above exception was the direct cause of the following exception:
-
-client = <starlette.testclient.TestClient object at 0x7f179cea6650>
+client = <starlette.testclient.TestClient object at 0x7fd039561690>
 
     def test_crude(client):
 >       response = client.get("/api/employees/get-employees")
 
-tests/test_crude.py:2: 
+tests/test_curde.py:2: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 /usr/local/lib/python3.11/site-packages/starlette/testclient.py:502: in get
     return super().get(
@@ -279,86 +73,51 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
     await app(scope, receive, sender)
 /usr/local/lib/python3.11/site-packages/starlette/routing.py:72: in app
     response = await func(request)
-/usr/local/lib/python3.11/site-packages/fastapi/routing.py:299: in app
+/usr/local/lib/python3.11/site-packages/fastapi/routing.py:285: in app
     raise e
-/usr/local/lib/python3.11/site-packages/fastapi/routing.py:294: in app
-    raw_response = await run_endpoint_function(
-/usr/local/lib/python3.11/site-packages/fastapi/routing.py:191: in run_endpoint_function
-    return await dependant.call(**values)
-app/views/employee.py:44: in get_employees
-    employees = await EmployeeModel.get_all(db)
-app/models.py:43: in get_all
-    return (await db.execute(select(cls))).scalars().all()
-/usr/local/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/session.py:455: in execute
-    result = await greenlet_spawn(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:200: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py:2308: in execute
-    return self._execute_internal(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/session.py:2190: in _execute_internal
-    result: Result[Any] = compile_state_cls.orm_execute_statement(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/orm/context.py:293: in orm_execute_statement
-    result = conn.execute(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1416: in execute
-    return meth(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/sql/elements.py:517: in _execute_on_connection
-    return connection._execute_clauseelement(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1639: in _execute_clauseelement
-    ret = self._execute_context(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1848: in _execute_context
-    return self._exec_single_context(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1988: in _exec_single_context
-    self._handle_dbapi_exception(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2344: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1969: in _exec_single_context
-    self.dialect.do_execute(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/default.py:922: in do_execute
-    cursor.execute(statement, parameters)
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:580: in execute
-    self._adapt_connection.await_(
-/usr/local/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:130: in await_only
-    return current.driver.switch(awaitable)  # type: ignore[no-any-return]
-/usr/local/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:195: in greenlet_spawn
-    value = await result
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:558: in _prepare_and_execute
-    self._handle_exception(error)
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:509: in _handle_exception
-    self._adapt_connection._handle_exception(error)
+/usr/local/lib/python3.11/site-packages/fastapi/routing.py:275: in app
+    solved_result = await solve_dependencies(
+/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py:594: in solve_dependencies
+    solved = await solve_generator(
+/usr/local/lib/python3.11/site-packages/fastapi/dependencies/utils.py:519: in solve_generator
+    return await stack.enter_async_context(cm)
+/usr/local/lib/python3.11/contextlib.py:650: in enter_async_context
+    result = await _enter(cm)
+/usr/local/lib/python3.11/contextlib.py:210: in __aenter__
+    return await anext(self.gen)
+app/services/database.py:66: in get_db
+    async with sessionmanager.session() as session:
+/usr/local/lib/python3.11/contextlib.py:210: in __aenter__
+    return await anext(self.gen)
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <AdaptedConnection <asyncpg.connection.Connection object at 0x7f179ced9120>>
-error = UndefinedTableError('relation "employees" does not exist')
+self = <app.services.database.DatabaseSessionManager object at 0x7fd0397b05d0>
 
-    def _handle_exception(self, error):
-        if self._connection.is_closed():
-            self._transaction = None
-            self._started = False
-    
-        if not isinstance(error, AsyncAdapt_asyncpg_dbapi.Error):
-            exception_mapping = self.dbapi._asyncpg_error_translate
-    
-            for super_ in type(error).__mro__:
-                if super_ in exception_mapping:
-                    translated_error = exception_mapping[super_](
-                        "%s: %s" % (type(error), error)
-                    )
-                    translated_error.pgcode = (
-                        translated_error.sqlstate
-                    ) = getattr(error, "sqlstate", None)
->                   raise translated_error from error
-E                   sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedTableError'>: relation "employees" does not exist
-E                   [SQL: SELECT employees.id, employees.first_name, employees.last_name, employees.gender, employees.age, employees.email, employees.phone, employees.education, employees.occupation, employees.experience_years, employees.salary, employees.marital_status, employees.number_of_children 
-E                   FROM employees]
-E                   (Background on this error at: https://sqlalche.me/e/20/f405)
+    @contextlib.asynccontextmanager
+    async def session(self) -> AsyncIterator[AsyncSession]:
+        if self._sessionmaker is None:
+>           raise Exception("DatabaseSessionManager is not initialized")
+E           Exception: DatabaseSessionManager is not initialized
 
-/usr/local/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: ProgrammingError
+app/services/database.py:44: Exception
 =============================== warnings summary ===============================
-tests/test_crude.py::test_crude
+tests/test_curde.py::test_crude
+  /usr/local/lib/python3.11/site-packages/pytest_asyncio/plugin.py:769: DeprecationWarning: The event_loop fixture provided by pytest-asyncio has been redefined in
+  /app/tests/conftest.py:25
+  Replacing the event_loop fixture with a custom implementation is deprecated
+  and will lead to errors in the future.
+  If you want to request an asyncio event loop with a scope other than function
+  scope, use the "scope" argument to the asyncio mark when marking the tests.
+  If you want to return different types of event loops, use the event_loop_policy
+  fixture.
+  
+    warnings.warn(
+
+tests/test_curde.py::test_crude
   /usr/local/lib/python3.11/site-packages/pydantic/_internal/_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
     warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
 
-tests/test_crude.py::test_crude
+tests/test_curde.py::test_crude
   /usr/local/lib/python3.11/site-packages/pydantic/_internal/_config.py:321: UserWarning: Valid config keys have changed in V2:
   * 'orm_mode' has been renamed to 'from_attributes'
     warnings.warn(message, UserWarning)
@@ -367,11 +126,15 @@ tests/test_crude.py::test_crude
   /usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:445: PytestCacheWarning: cache could not write path /app/.pytest_cache/v/cache/nodeids: [Errno 13] Permission denied: '/app/.pytest_cache/v/cache/nodeids'
     config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
+../usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:397
+  /usr/local/lib/python3.11/site-packages/_pytest/cacheprovider.py:397: PytestCacheWarning: cache could not write path /app/.pytest_cache/v/cache/lastfailed: [Errno 13] Permission denied: '/app/.pytest_cache/v/cache/lastfailed'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
 ../usr/local/lib/python3.11/site-packages/_pytest/stepwise.py:56
   /usr/local/lib/python3.11/site-packages/_pytest/stepwise.py:56: PytestCacheWarning: cache could not write path /app/.pytest_cache/v/cache/stepwise: [Errno 13] Permission denied: '/app/.pytest_cache/v/cache/stepwise'
     session.config.cache.set(STEPWISE_CACHE_DIR, [])
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
-FAILED tests/test_crude.py::test_crude - sqlalchemy.exc.ProgrammingError: (sq...
-======================== 1 failed, 4 warnings in 5.81s =========================
+FAILED tests/test_curde.py::test_crude - Exception: DatabaseSessionManager is...
+======================== 1 failed, 6 warnings in 4.97s =========================

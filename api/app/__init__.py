@@ -10,8 +10,8 @@ def init_app(init_db=True):
 
     if init_db:
         sessionmanager.init(config.DB_CONFIG)
-    else:
-        sessionmanager.init(config.DB_TEST_CONFIG)
+    # else:
+    #     sessionmanager.init(config.DB_TEST_CONFIG)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
