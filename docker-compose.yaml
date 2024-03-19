@@ -30,8 +30,8 @@ services:
   db:
     container_name: postgres
     image: postgres:16.1-alpine
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
+    # volumes:
+    #   - ./db/data:/var/lib/postgresql/data
     env_file:
       - ./db/.env.db
   test_db:
