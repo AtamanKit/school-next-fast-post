@@ -5,3 +5,5 @@
 
 # Ignore `python` directories and files
 */env
+
+10000-rows.csv

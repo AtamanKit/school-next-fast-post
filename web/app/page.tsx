@@ -1,12 +1,15 @@
-"use client"
+import BrHome from "@/components/shared/Breadcrumbs/BrHome"
 
-import { useEffect, useState } from "react";
-
-export default function Home() {
+export default function Page() {
 
   return (
-    <main className="flex h-screen justify-center items-center">
-      <h1 className="text-4xl font-sans font-bold ">Hello World!</h1>
+    <main>
+      <div className="p-5">
+        <BrHome />
+      </div>
+      <div className="flex h-screen justify-center items-center">
+        <h1 className="text-4xl font-sans font-bold ">Hello World!</h1>
+      </div>
     </main>
   )
 }

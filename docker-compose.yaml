@@ -12,6 +12,7 @@ services:
       - ./web/public:/app/public
     ports:
       - "3000:3000"
+
   api:
     image: api:v1
     container_name: api
@@ -27,17 +28,23 @@ services:
       # - ./api/.env.test
     depends_on:
       - db
+
   db:
     container_name: postgres
     image: postgres:16.1-alpine
-    # volumes:
-    #   - ./db/data:/var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./db/.env.db
+
   test_db:
     container_name: test_postgres
     image: postgres:16.1-alpine
-    # volumes:
-    #   - ./db/test_data:/var/lib/postgresql/data
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./db/.env.test_db
+
+volumes:
+  postgres_data:
+  test_postgres_data:
