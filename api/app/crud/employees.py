@@ -2,10 +2,16 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import models
+from app import schemas
 
 
 async def get_employee(db: AsyncSession, id: int):
     result = await db.execute(select(models.Employee).filter(models.Employee.id == id))
+    employee = result.scalars().first()
+    return employee
+
+async def get_employee_by_email(db: AsyncSession, email: str):
+    result = await db.execute(select(models.Employee).filter(models.Employee.email == email))
     employee = result.scalars().first()
     return employee
 
@@ -14,7 +20,7 @@ async def get_employees(db: AsyncSession, skip: int = 0, limit: int = 100):
     employees = result.scalars().all()
     return employees
 
-async def create_employee(db: AsyncSession, employee: schemas.EmployeeCreate):
+async def create_employee(db: AsyncSession, employee: schemas.EmployeeSchemaCreate):
     db_employee = models.Employee(**employee.dict())
     db.add(db_employee)
     await db.commit()
