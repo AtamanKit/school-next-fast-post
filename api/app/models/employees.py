@@ -10,7 +10,7 @@ class Employee(Base):
     last_name = Column(String, index=True)
     gender = Column(String)
     age = Column(Integer)
-    email = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, index=True, nullable=False)
     phone = Column(String)
     education = Column(String)
     occupation = Column(String)

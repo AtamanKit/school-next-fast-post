@@ -20,12 +20,13 @@ services:
       context: ./api
     volumes:
       - ./api:/app
-    command: uvicorn run:server --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
+    environment:
+      TESTING: 0
     env_file:
       - ./api/.env.api
-      # - ./api/.env.test
     depends_on:
       - db
 
@@ -35,7 +36,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./db/.env.db
+      - ./api/.env.db
 
   test_db:
     container_name: test_postgres
@@ -43,7 +44,7 @@ services:
     volumes:
       - test_postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./db/.env.test_db
+      - ./api/.env.db
 
 volumes:
   postgres_data:
