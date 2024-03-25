@@ -16,7 +16,7 @@ async def get_employee_by_email(db: AsyncSession, email: str):
     return employee
 
 async def get_employees(db: AsyncSession, skip: int = 0, limit: int = 100):
-    result = await db.execute(select(models.Employee).offset(skip).limit(limit))
+    result = await db.execute(select(models.Employee).offset(skip).limit(limit).order_by(models.Employee.id))
     employees = result.scalars().all()
     return employees
 

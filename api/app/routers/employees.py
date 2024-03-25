@@ -6,6 +6,8 @@ from app.crud.employees import get_employee, get_employee_by_email, get_employee
 from app.schemas import EmployeeSchema, EmployeeSchemaCreate
 from app.database import get_db
 
+from app import models
+from sqlalchemy import select
 
 
 router = APIRouter()
@@ -23,8 +25,12 @@ async def create_employee_route(employee: EmployeeSchemaCreate, db: AsyncSession
 # Get all employees
 @router.get("/employees/", response_model=list[EmployeeSchema])
 async def get_employees_route(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
-    return await get_employees(db, skip, limit)
-
+    return await get_employees(db, skip=skip, limit=limit)
+# @router.get("/employees/", response_model=list[EmployeeSchema])
+# async def get_employees_route(db: AsyncSession = Depends(get_db)):
+#     result = await db.execute(select(models.Employee).offset(9980).limit(50))
+#     employees = result.scalars().all()
+#     return employees
 
 # Get employee by id
 @router.get("/employees/{employee_id}", response_model=EmployeeSchema)

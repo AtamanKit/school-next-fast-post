@@ -29,6 +29,7 @@ services:
       - ./api/.env.api
     depends_on:
       - db
+      - db_test
 
   db:
     container_name: postgres
@@ -38,14 +39,14 @@ services:
     env_file:
       - ./api/.env.db
 
-  test_db:
-    container_name: test_postgres
+  db_test:
+    container_name: postgres_test
     image: postgres:16.1-alpine
-    volumes:
-      - test_postgres_data:/var/lib/postgresql/data/
+    # volumes:
+    #   - postgres_data_test:/var/lib/postgresql/data/
     env_file:
       - ./api/.env.db
 
 volumes:
   postgres_data:
-  test_postgres_data:
+  # postgres_data_test:
