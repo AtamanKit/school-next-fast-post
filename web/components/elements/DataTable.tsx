@@ -43,93 +43,8 @@ import {
 import { EmployeeProps } from "@/types"
 import { Employees }  from "@/constants"
 
-// const data: EmployeeProps[] = [
-//   {
-//     id: 1,
-//     firstName: "Igor",
-//     lastName: "Talkov",
-//     gender: "Male",
-//     age: 45,
-//     email: "igortalkiv@hotmail.com",
-//     phone: "063823234",
-//     education: "PhD",
-//     occupation: "Musician",
-//     experienceYears: 32,
-//     salary: 10321,
-//     maritalStatus: "Married",
-//     numberOfChildren: 1,
-//   },
-//   {
-//     id: 2,
-//     firstName: "Alla",
-//     lastName: "Pugachiova",
-//     gender: "Female",
-//     age: 58,
-//     email: "allapugachiova@gmail.com",
-//     phone: "063823234",
-//     education: "Bachelor",
-//     occupation: "Singer",
-//     experienceYears: 32,
-//     salary: 9321,
-//     maritalStatus: "Married",
-//     numberOfChildren: 3,
-//   },
-//   {
-//     id: 3,
-//     firstName: "Iurii",
-//     lastName: "Shatunov",
-//     gender: "Male",
-//     age: 34,
-//     email: "iuriishatunov@mail.ru",
-//     phone: "063823234",
-//     education: "PhD",
-//     occupation: "Hacker",
-//     experienceYears: 18,
-//     salary: 8321,
-//     maritalStatus: "Married",
-//     numberOfChildren: 2,
-//   },
 
-//   {
-//     id: 4,
-//     firstName: "Bogdan",
-//     lastName: "Titamir",
-//     gender: "Male",
-//     age: 54,
-//     email: "bogdantitamir@gmail.com",
-//     phone: "063343234",
-//     education: "High School",
-//     occupation: "Construction Worker",
-//     experienceYears: 34,
-//     salary: 4321,
-//     maritalStatus: "Single",
-//     numberOfChildren: 0,
-//   },
-//   {
-//     id: 5,
-//     firstName: "Sofia",
-//     lastName: "Rotaru",
-//     gender: "Female",
-//     age: 34,
-//     email: "sofiarotaru@hotmail.com",
-//     phone: "063823234",
-//     education: "Bachelor",
-//     occupation: "Singer",
-//     experienceYears: 14,
-//     salary: 4321,
-//     maritalStatus: "Divorced",
-//     numberOfChildren: 2,
-//   },
-// ]
-
-// export type Payment = {
-//   id: string
-//   amount: number
-//   status: "pending" | "processing" | "success" | "failed"
-//   email: string
-// }
-
-export const columns: ColumnDef<Employee>[] = [
+export const columns: ColumnDef<EmployeeProps>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -217,10 +132,10 @@ export const columns: ColumnDef<Employee>[] = [
     ),
   },
   {
-    accessorKey: "experienceYears",
+    accessorKey: "experience_years",
     header: "Experience Years",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("experienceYears")}</div>
+      <div className="capitalize">{row.getValue("experience_years")}</div>
     ),
   },
   {
@@ -283,7 +198,7 @@ export const columns: ColumnDef<Employee>[] = [
   },
 ]
 
-export default function DataTable() {
+export default function DataTable( { data }: EmployeeProps[] ) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -292,8 +207,26 @@ export default function DataTable() {
     React.useState<VisibilityState>({firstName: false, lastName: false})
   const [rowSelection, setRowSelection] = React.useState({})
 
-  const data: EmployeeProps[] = Employees
-  
+  // const [employeeData, setEmployeeData] = React.useState<EmployeeProps[]>([])
+
+  // const data: EmployeeProps[] = Employees
+  // React.useEffect(() => {
+  //   async function getData() {
+  //     const res = await fetch('http://localhost:8000/api/employees/')
+
+  //     if (!res.ok) {
+  //       throw new Error('Failed to fetch data')
+  //     }
+
+  //     setEmployeeData(await res.json())
+  //   }
+
+  //   getData()
+  // }, [])
+
+  // const data: EmployeeProps[] = employeeData
+
+
   const table = useReactTable({
     data,
     columns,

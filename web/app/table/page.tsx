@@ -5,7 +5,7 @@ import { EmployeeProps } from "@/types"
 
 
 async function getData() {
-    const res = await fetch('http://localhost:8000/api/employees/')
+    const res = await fetch('http://api:8000/api/employees/')
 
     if (!res.ok) {
         throw new Error('Failed to fetch data')
@@ -14,11 +14,9 @@ async function getData() {
     return res.json()
 }
 
-getData()
 
 export default async function Page() {
-    const data: EmployeeProps[] = await getData()
-    console.log(data)
+    const employeeData: EmployeeProps[] = await getData()
 
     return (
         <main>
@@ -26,7 +24,9 @@ export default async function Page() {
                 <BrTable />
             </div>
             <div>
-                <DataTable />
+                <DataTable
+                    data={employeeData}
+                />
             </div>
         </main>
     )

@@ -1,15 +1,15 @@
 export interface EmployeeProps {
     id: number
-    firstName: string
-    lastName: string
+    first_name: string
+    last_name: string
     gender: string
     age: number
     email: string
     phone: string
     education: string
     occupation: string
-    experienceYears: number
+    experience_years: number
     salary: number
-    maritalStatus: "Single" | "Married" | "Divorced"
-    numberOfChildren: number
+    marital_status: "Single" | "Married" | "Divorced"
+    number_of_children: number
     }
