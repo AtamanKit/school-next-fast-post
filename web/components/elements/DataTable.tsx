@@ -68,14 +68,14 @@ export const columns: ColumnDef<EmployeeProps>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "firstName",
+    accessorKey: "first_name",
     // header: "First Name",
     // cell: ({ row }) => (
     //   <div className="capitalize">{row.getValue("firstName")}</div>
     // ),
   },
   {
-    accessorKey: "lastName",
+    accessorKey: "last_name",
     // header: "Last Name",
     // cell: ({ row }) => (
     //   <div className="capitalize">{row.getValue("firstName") + " " + row.getValue("lastName")}</div>
@@ -85,7 +85,7 @@ export const columns: ColumnDef<EmployeeProps>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({row}) => (
-      <div className="capitalize">{row.getValue("firstName") + " " + row.getValue("lastName")}</div>
+      <div className="capitalize">{row.getValue("first_name") + " " + row.getValue("last_name")}</div>
     )
   },
   {
@@ -146,17 +146,17 @@ export const columns: ColumnDef<EmployeeProps>[] = [
     ),
   },
   {
-    accessorKey: "maritalStatus",
+    accessorKey: "marital_status",
     header: "Marital Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("maritalStatus")}</div>
+      <div className="capitalize">{row.getValue("marital_status")}</div>
     ),
   },
   {
-    accessorKey: "numberOfChildren",
+    accessorKey: "number_of_children",
     header: "Number Of Children",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("numberOfChildren")}</div>
+      <div className="capitalize">{row.getValue("number_of_children")}</div>
     ),
   },
 
