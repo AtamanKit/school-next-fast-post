@@ -1,7 +1,7 @@
 import BrHome from "./BrHome"
-import BrTable from "./BrTable"
+import BrTableShow from "./BrTableShow"
 
 export {
     BrHome,
-    BrTable,
+    BrTableShow,
 }

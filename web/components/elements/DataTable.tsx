@@ -69,17 +69,17 @@ export const columns: ColumnDef<EmployeeProps>[] = [
   },
   {
     accessorKey: "first_name",
-    // header: "First Name",
-    // cell: ({ row }) => (
-    //   <div className="capitalize">{row.getValue("firstName")}</div>
-    // ),
+    header: "First Name",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("first_name")}</div>
+    ),
   },
   {
     accessorKey: "last_name",
-    // header: "Last Name",
-    // cell: ({ row }) => (
-    //   <div className="capitalize">{row.getValue("firstName") + " " + row.getValue("lastName")}</div>
-    // ),
+    header: "Last Name",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("last_name")}</div>
+    ),
   },
   {
     accessorKey: "name",
@@ -207,26 +207,6 @@ export default function DataTable( { data }: EmployeeProps[] ) {
     React.useState<VisibilityState>({firstName: false, lastName: false})
   const [rowSelection, setRowSelection] = React.useState({})
 
-  // const [employeeData, setEmployeeData] = React.useState<EmployeeProps[]>([])
-
-  // const data: EmployeeProps[] = Employees
-  // React.useEffect(() => {
-  //   async function getData() {
-  //     const res = await fetch('http://localhost:8000/api/employees/')
-
-  //     if (!res.ok) {
-  //       throw new Error('Failed to fetch data')
-  //     }
-
-  //     setEmployeeData(await res.json())
-  //   }
-
-  //   getData()
-  // }, [])
-
-  // const data: EmployeeProps[] = employeeData
-
-
   const table = useReactTable({
     data,
     columns,
@@ -245,6 +225,13 @@ export default function DataTable( { data }: EmployeeProps[] ) {
       rowSelection,
     },
   })
+
+  console.log(table.getColumn("first_name"))
+  console.log(table)
+  React.useEffect(() => {
+    table.getColumn("first_name")?.toggleVisibility(false)
+    table.getColumn("last_name")?.toggleVisibility(false)
+  }, [])
 
   return (
     <div className="w-full">
@@ -277,7 +264,7 @@ export default function DataTable( { data }: EmployeeProps[] ) {
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {column.id != "email" ? column.columnDef.header : "Email"}
                   </DropdownMenuCheckboxItem>
                 )
               })}

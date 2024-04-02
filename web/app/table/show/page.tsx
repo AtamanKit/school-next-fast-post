@@ -1,11 +1,12 @@
-import BrTable from "@/components/shared/Breadcrumbs/BrTable"
+import BrTableShow from "@/components/shared/Breadcrumbs/BrTableShow"
 import DataTable from "@/components/elements/DataTable"
+import TableForm from "@/components/elements/TableForm"
 
 import { EmployeeProps } from "@/types"
 
 
 async function getData() {
-    const res = await fetch('http://api:8000/api/employees/')
+    const res = await fetch('http://api:8000/api/employees/?skip=0&limit=10000')
 
     if (!res.ok) {
         throw new Error('Failed to fetch data')
@@ -21,7 +22,7 @@ export default async function Page() {
     return (
         <main>
             <div className="p-5">
-                <BrTable />
+                <BrTableShow />
             </div>
             <div>
                 <DataTable
