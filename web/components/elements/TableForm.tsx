@@ -17,14 +17,58 @@ import {
 import { Input } from "@/components/ui/input"
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  firstName: z.string().min(2, {
+    message: "First Name must be at least 2 characters.",
+  }),
+  lastName: z.string().min(2, {
+    message: "Last Name must be at least 2 characters.",
+  }),
+  gender: z.string().min(2, {
+    message: "Gender must be at least 2 characters.",
+  }),
+  age: z.number().min(1, {
+    message: "Age must be at least 1.",
+  }),
+  email: z.string().email({
+    message: "Invalid email address."
+  }),
+  phone: z.string().min(2, {
+    message: "Phone must be at least 2 characters.",
+  }),
+  education: z.string().min(2, {
+    message: "Education must be at least 2 characters.",
+  }),
+  occupation: z.string().min(2, {
+    message: "Occupation must be at least 2 characters.",
+  }),
+  experienceYears: z.number().min(1, {
+    message: "Experience Years must be at least 1.",
+  }),
+  salary: z.number().min(1, {
+    message: "Salary must be at least 1.",
+  }),
+  maritalStatus: z.string().min(2, {
+    message: "Marital Status must be at least 2 characters.",
+  }),
+  numberOfChildren: z.number().min(1, {
+    message: "Number Of Children must be at least 1.",
   }),
 })
 
 export default function TableForm() {
   const form = useForm<z.infer<typeof formSchema>>({resolver: zodResolver(formSchema), defaultValues: {
-    username: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    age: 0,
+    email: "",
+    phone: "",
+    education: "",
+    occupation: "",
+    experienceYears: "",
+    salary: "",
+    maritalStatus: "",
+    numberOfChildren: "",
   }})
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -34,146 +78,234 @@ export default function TableForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 px-10 mb-10">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <div className="lg:flex lg:justify-between lg:space-x-10">
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+        <div className="lg:flex lg:space-x-8">
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-between lg:space-x-10">
-                <div className="mb-6 w-full space-y-2">
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-                </div>
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="lg:flex lg:space-x-8">
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-between lg:space-x-10">
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Age</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...rest}{...field} type="number"/>
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="lg:flex lg:space-x-8">
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-between lg:space-x-10">
-                <div className="mb-6 w-full space-y-2">
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-                </div>
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-between lg:space-x-10">
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="lg:flex lg:space-x-8">
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="education"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Education</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="occupation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Occupation</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-between lg:space-x-10">
-                <div className="mb-6 w-full space-y-2">
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-                </div>
-                <div className="mb-6 w-full space-y-2">
-                  <FormLabel>Username</FormLabel>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="lg:flex lg:space-x-8">
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="experienceYears"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Experience Years</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Input field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
                   </FormDescription>
                   <FormMessage />
-                </div>
-              </div>
-            </FormItem>
-          )}
-        />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="salary"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Salary</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Input field" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+        <div className="lg:flex lg:space-x-8">
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="maritalStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marital Status</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Input field" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="w-full">
+            <FormField
+              control={form.control}
+              name="numberOfChildren"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Number Of Children</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Input field" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
         <Button type="submit">Submit</Button>
       </form>
     </Form>
