@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -16,11 +16,16 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+import { useRouter } from "next/navigation"
+
+import { useEffect, useState } from "react"
+
+
 const formSchema = z.object({
-  firstName: z.string().min(2, {
+  first_name: z.string().min(2, {
     message: "First Name must be at least 2 characters.",
   }),
-  lastName: z.string().min(2, {
+  last_name: z.string().min(2, {
     message: "Last Name must be at least 2 characters.",
   }),
   gender: z.string().min(2, {
@@ -41,38 +46,67 @@ const formSchema = z.object({
   occupation: z.string().min(2, {
     message: "Occupation must be at least 2 characters.",
   }),
-  experienceYears: z.number().min(1, {
+  experience_years: z.number().min(1, {
     message: "Experience Years must be at least 1.",
   }),
   salary: z.number().min(1, {
     message: "Salary must be at least 1.",
   }),
-  maritalStatus: z.string().min(2, {
+  marital_status: z.string().min(2, {
     message: "Marital Status must be at least 2 characters.",
   }),
-  numberOfChildren: z.number().min(1, {
+  number_of_children: z.number().min(1, {
     message: "Number Of Children must be at least 1.",
   }),
 })
 
 export default function TableForm() {
   const form = useForm<z.infer<typeof formSchema>>({resolver: zodResolver(formSchema), defaultValues: {
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     gender: "",
-    age: 0,
+    age: "",
     email: "",
     phone: "",
     education: "",
     occupation: "",
-    experienceYears: "",
+    experience_years: "",
     salary: "",
-    maritalStatus: "",
-    numberOfChildren: "",
+    marital_status: "",
+    number_of_children: "",
   }})
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  // const router = useRouter()
+
+  // const [shouldNavigate, setShouldNavigate] = useState(false)
+
+  // useEffect(() => {
+  //   if (shouldNavigate) {
+  //     router.push("/message/success")
+  //   }
+  // }, [shouldNavigate, router])
+
+  const router = useRouter()
+  
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    router.push("/message/success")
+    try {
+      const response = await fetch('http://localhost:8000/api/employees/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        console.log('Data posted successfully');
+      } else {
+        console.log('Failed to post data');
+      }
+    } catch (error) {
+      console.error('An error occurred while posting data:', error);
+    }
   }
 
   return (
@@ -82,12 +116,12 @@ export default function TableForm() {
           <div className="w-full">
             <FormField
               control={form.control}
-              name="firstName"
+              name="first_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -100,12 +134,12 @@ export default function TableForm() {
           <div className="w-full">
             <FormField
               control={form.control}
-              name="lastName"
+              name="last_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -125,7 +159,7 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -143,7 +177,9 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Age</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...rest}{...field} type="number"/>
+                    <Input placeholder="Number field" {...field}
+                      onChange={(e) => field.onChange(e.target.value === "" ? 0 : !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value)}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -163,7 +199,7 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -181,7 +217,7 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -201,7 +237,7 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Education</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -219,7 +255,7 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Occupation</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -234,12 +270,19 @@ export default function TableForm() {
           <div className="w-full">
             <FormField
               control={form.control}
-              name="experienceYears"
+              name="experience_years"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Experience Years</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    {/* <NumericInput 
+                      placeholder="Text field"
+                      control={form.control}
+                      name="experience_years"
+                    /> */}
+                    <Input placeholder="Number field" {...field}
+                      onChange={(e) => field.onChange(e.target.value === "" ? 0 : !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value)}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -257,7 +300,9 @@ export default function TableForm() {
                 <FormItem>
                   <FormLabel>Salary</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Number field" {...field}
+                      onChange={(e) => field.onChange(e.target.value === "" ? 0 : !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value)}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -272,12 +317,12 @@ export default function TableForm() {
           <div className="w-full">
             <FormField
               control={form.control}
-              name="maritalStatus"
+              name="marital_status"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Marital Status</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Text field" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -290,12 +335,14 @@ export default function TableForm() {
           <div className="w-full">
             <FormField
               control={form.control}
-              name="numberOfChildren"
+              name="number_of_children"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Number Of Children</FormLabel>
                   <FormControl>
-                    <Input placeholder="Input field" {...field} />
+                    <Input placeholder="Number field" {...field}
+                      onChange={(e) => field.onChange(e.target.value === "" ? 0 : !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value)}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.

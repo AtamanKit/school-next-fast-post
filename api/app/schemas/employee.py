@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class EmployeeSchemaBase(BaseModel):
@@ -23,3 +24,6 @@ class EmployeeSchema(EmployeeSchemaBase):
 
     class Config:
         orm_mode = True
+
+class EmployeeSchemaList(BaseModel):
+    ids: List[int]

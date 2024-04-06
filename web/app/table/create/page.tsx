@@ -1,6 +1,7 @@
 import TableForm from '@/components/elements/TableForm'
 import BrTableCreate from '@/components/shared/Breadcrumbs/BrTableCreate'
 
+
 export default function Page() {
     return (
         <main>
@@ -8,7 +9,7 @@ export default function Page() {
                 <BrTableCreate />
             </div>
             <div>
-                <TableForm />
+                <TableForm/>
             </div>
         </main>
     )

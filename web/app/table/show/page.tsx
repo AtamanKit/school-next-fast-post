@@ -5,19 +5,19 @@ import TableForm from "@/components/elements/TableForm"
 import { EmployeeProps } from "@/types"
 
 
-async function getData() {
-    const res = await fetch('http://api:8000/api/employees/?skip=0&limit=10000')
+// async function getData() {
+//     const res = await fetch('http://api:8000/api/employees/?skip=0&limit=10000')
 
-    if (!res.ok) {
-        throw new Error('Failed to fetch data')
-    }
+//     if (!res.ok) {
+//         throw new Error('Failed to fetch data')
+//     }
 
-    return res.json()
-}
+//     return res.json()
+// }
 
 
 export default async function Page() {
-    const employeeData: EmployeeProps[] = await getData()
+    // const employeeData: EmployeeProps[] = await getData()
 
     return (
         <main>
@@ -26,7 +26,7 @@ export default async function Page() {
             </div>
             <div>
                 <DataTable
-                    data={employeeData}
+                    // data={employeeData}
                 />
             </div>
         </main>

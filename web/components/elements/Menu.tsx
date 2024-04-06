@@ -20,7 +20,7 @@ const Menu = () => {
   return (
     <main className="flex justify-between hover:cursor-pointer items-center">
       <nav className="flex max-lg:hidden">
-        <ul className="flex">
+        <ul className="flex space-x-2">
             <li className="hover:text-blue-500">
               {/* <Link href="/">Home</Link> */}
               <Button variant="outline">

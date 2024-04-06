@@ -40,8 +40,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import Link from "next/link"
+
 import { EmployeeProps } from "@/types"
-import { Employees }  from "@/constants"
 
 
 export const columns: ColumnDef<EmployeeProps>[] = [
@@ -198,7 +199,7 @@ export const columns: ColumnDef<EmployeeProps>[] = [
   },
 ]
 
-export default function DataTable( { data }: EmployeeProps[] ) {
+export default function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -206,6 +207,25 @@ export default function DataTable( { data }: EmployeeProps[] ) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({firstName: false, lastName: false})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const [data, setData] = React.useState<EmployeeProps[]>([])
+
+  React.useEffect(() => {
+    async function getData() {
+      const res = await fetch("http://localhost:8000/api/employees/")
+      if (!res.ok) {
+        throw new Error("Failed to fetch data")
+      }
+
+      return res.json()
+    }
+
+    getData().then((data) => 
+      setData(data)
+    )
+    .catch(error => console.error("Failed to load data", error))
+    
+  }, [])
 
   const table = useReactTable({
     data,
@@ -226,8 +246,24 @@ export default function DataTable( { data }: EmployeeProps[] ) {
     },
   })
 
-  console.log(table.getColumn("first_name"))
-  console.log(table)
+  async function handleDelete() {
+    const selectedRows = table.getFilteredSelectedRowModel().rows
+    if (selectedRows.length) {
+      const ids = selectedRows.map((row) => row.original.id)
+      console.log("Deleting rows with IDs: ", ids)
+
+      const result = await fetch("http://localhost:8000/api/employees/", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids }),
+      })
+      setData(data.filter((row) => !ids.includes(row.id)))
+      table.resetRowSelection()
+    }
+  }
+  
   React.useEffect(() => {
     table.getColumn("first_name")?.toggleVisibility(false)
     table.getColumn("last_name")?.toggleVisibility(false)
@@ -236,14 +272,33 @@ export default function DataTable( { data }: EmployeeProps[] ) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        <div className="flex space-x-4">
+          <Input
+            placeholder="Filter emails..."
+            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("email")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+    />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                {/* <Link href="/table">Table</Link> */}
+                Actions
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleDelete}>
+                  Delete
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/table/create/">New Employee</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

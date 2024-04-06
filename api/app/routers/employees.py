@@ -3,12 +3,13 @@ from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.employees import get_employee, get_employee_by_email, get_employees, create_employee, delete_employee
-from app.schemas import EmployeeSchema, EmployeeSchemaCreate
+from app.schemas import EmployeeSchema, EmployeeSchemaCreate, EmployeeSchemaList
 from app.database import get_db
 
 from app import models
 from sqlalchemy import select
 
+from typing import List
 
 router = APIRouter()
 
@@ -42,9 +43,9 @@ async def get_employee_route(employee_id: int, db: AsyncSession = Depends(get_db
 
 
 # Delete employee by id
-@router.delete("/employees/{employee_id}")
-async def delete_employee_route(employee_id: int, db: AsyncSession = Depends(get_db)):
-    deleted = await delete_employee(db, employee_id)
+@router.delete("/employees/")
+async def delete_employee_route(ids: EmployeeSchemaList, db: AsyncSession = Depends(get_db)):
+    deleted = await delete_employee(db, ids)
     if not deleted:
         raise HTTPException(status_code=404, detail="Employee not found")
     return {"message": "Employee deleted successfully"}

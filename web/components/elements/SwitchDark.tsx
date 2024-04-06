@@ -19,7 +19,6 @@ const SwitchDark = () => {
     // }, [darkMode])
     const { theme, toggleTheme } = useTheme();
 
-    console.log("themeValue: ", theme)
     // console.log("swColorValue: ", swColor)
     
     return (
