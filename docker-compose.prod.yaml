@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  web:
+    image: web:v1
+    container_name: web
+    build:
+      context: ./web
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+
+  api:
+    image: api:v1
+    container_name: api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./api:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    environment:
+      TESTING: 0
+    env_file:
+      - ./api/.env.api
+    depends_on:
+      - db
+      - db_test
+
+  db:
+    container_name: postgres
+    image: postgres:16.1-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./api/.env.db
+
+  db_test:
+    container_name: postgres_test
+    image: postgres:16.1-alpine
+    # volumes:
+    #   - postgres_data_test:/var/lib/postgresql/data/
+    env_file:
+      - ./api/.env.db
+
+  nginx:
+    image: nginx:v1
+    container_name: nginx
+    build: ./nginx
+    restart: always
+    ports:
+      - 80:80
+
+volumes:
+  postgres_data:
+  # postgres_data_test:

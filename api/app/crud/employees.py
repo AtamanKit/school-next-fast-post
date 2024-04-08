@@ -33,10 +33,11 @@ async def create_employee(db: AsyncSession, employee: schemas.EmployeeSchemaCrea
 
 
 async def delete_employee(db: AsyncSession, ids: schemas.EmployeeSchemaList):
+    delete: bool = False
     for id in ids.ids:
         employee = await get_employee(db, id)
         if employee:
             await db.delete(employee)
             await db.commit()
-            return True
-    return False
+            delete = True
+    return delete

@@ -44,6 +44,8 @@ import Link from "next/link"
 
 import { EmployeeProps } from "@/types"
 
+import { apiUrl } from "@/lib/utils"
+
 
 export const columns: ColumnDef<EmployeeProps>[] = [
   {
@@ -185,7 +187,7 @@ export const columns: ColumnDef<EmployeeProps>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(employee.id)}
+              onClick={() => navigator.clipboard.writeText(employee.id.toString())}
             >
               Copy payment ID
             </DropdownMenuItem>
@@ -212,7 +214,7 @@ export default function DataTable() {
 
   React.useEffect(() => {
     async function getData() {
-      const res = await fetch("http://localhost:8000/api/employees/")
+      const res = await fetch(`${apiUrl()}/employees/`)
       if (!res.ok) {
         throw new Error("Failed to fetch data")
       }
@@ -252,7 +254,7 @@ export default function DataTable() {
       const ids = selectedRows.map((row) => row.original.id)
       console.log("Deleting rows with IDs: ", ids)
 
-      const result = await fetch("http://localhost:8000/api/employees/", {
+      const result = await fetch(`${apiUrl()}/employees/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -310,6 +312,7 @@ export default function DataTable() {
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
+                console.log(column.columnDef.header)
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -319,7 +322,7 @@ export default function DataTable() {
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id != "email" ? column.columnDef.header : "Email"}
+                    {column.id}
                   </DropdownMenuCheckboxItem>
                 )
               })}

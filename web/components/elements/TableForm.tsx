@@ -18,8 +18,7 @@ import { Input } from "@/components/ui/input"
 
 import { useRouter } from "next/navigation"
 
-import { useEffect, useState } from "react"
-
+import { apiUrl } from "@/lib/utils"
 
 const formSchema = z.object({
   first_name: z.string().min(2, {
@@ -55,9 +54,7 @@ const formSchema = z.object({
   marital_status: z.string().min(2, {
     message: "Marital Status must be at least 2 characters.",
   }),
-  number_of_children: z.number().min(1, {
-    message: "Number Of Children must be at least 1.",
-  }),
+  number_of_children: z.number(),
 })
 
 export default function TableForm() {
@@ -65,33 +62,23 @@ export default function TableForm() {
     first_name: "",
     last_name: "",
     gender: "",
-    age: "",
+    // age: "",
     email: "",
     phone: "",
     education: "",
     occupation: "",
-    experience_years: "",
-    salary: "",
+    // experience_years: "",
+    // salary: "",
     marital_status: "",
-    number_of_children: "",
+    // number_of_children: "",
   }})
-
-  // const router = useRouter()
-
-  // const [shouldNavigate, setShouldNavigate] = useState(false)
-
-  // useEffect(() => {
-  //   if (shouldNavigate) {
-  //     router.push("/message/success")
-  //   }
-  // }, [shouldNavigate, router])
 
   const router = useRouter()
   
   async function onSubmit(values: z.infer<typeof formSchema>) {
     router.push("/message/success")
     try {
-      const response = await fetch('http://localhost:8000/api/employees/', {
+      const response = await fetch(`${apiUrl()}/employees/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

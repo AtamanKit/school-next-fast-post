@@ -15,7 +15,4 @@ RUN pip install -r requirements.txt
 RUN adduser -D nonrootuser
 USER nonrootuser
 
-# RUN pip show uvicorn
-# RUN uvicorn --help
-
 COPY . .
