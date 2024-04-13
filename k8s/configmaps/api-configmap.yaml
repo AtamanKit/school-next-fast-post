@@ -5,3 +5,4 @@ metadata:
 data:
   DB_URL: "postgresql+asyncpg://postgres:secret@db/postgres"
   DB_URL_TEST: "postgresql+asyncpg://postgres:secret@db_test/postgres"
+  TESTING: "0"

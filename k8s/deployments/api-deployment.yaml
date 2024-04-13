@@ -22,5 +22,5 @@ spec:
         envFrom:
         - configMapRef:
             name: api-config
-        - secretRef:
-            name: api-secret
+        # - secretRef:
+        #     name: api-secret

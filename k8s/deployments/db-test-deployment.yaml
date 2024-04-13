@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-deployment
+  name: db-test-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: db-test
   template:
     metadata:
       labels:
-        app: db
+        app: db-test
     spec:
       containers:
-      - name: db
+      - name: db-test
         image: postgres:16.1-alpine
         volumeMounts:
         - name: postgres-data
