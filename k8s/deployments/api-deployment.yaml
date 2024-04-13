@@ -19,7 +19,7 @@ spec:
         - containerPort: 8080
         command: ["uvicorn"]
         args: ["app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-        envForm:
+        envFrom:
         - configMapRef:
             name: api-config
         - secretRef:
